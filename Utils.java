@@ -129,4 +129,139 @@ public class Utils {
         Objects.requireNonNull(position);
         return Integer.parseInt(position.split(" ")[1]);
     }
+    /***/
+
+    /** returns the an xTrail og given length **/
+    public static int[] getXTrail(String initPos, Direction direction, int length) {
+        int[] output = new int[length];
+        int currentX = getX(initPos);
+        for (int i=0; i<length; i++) {
+            if (direction == Direction.RIGHT) {
+                output[i] = currentX;
+                currentX++;
+            } else {
+                output[i] = currentX;
+            }
+        }
+        return output;
+    }
+
+    /** returns the yTrail of a word **/
+    public static int[] getYTrail(String initPos, Direction direction, int length) {
+        int[] output = new int[length];
+        int currentY = getY(initPos);
+        for (int i=0; i<length; i++) {
+            if (direction == Direction.UP) {
+                output[i] = currentY;
+                currentY++;
+            } else {
+                output[i] = currentY;
+            }
+        }
+        return output;
+    }
+
+    /** removes any completely null rows or columns from a 2D array, but keeps it square **/
+    public static String[][] strip2DArray(String[][] givenArray) {
+        int dim = givenArray.length;
+        ArrayList<Integer> rowsToRemove = new ArrayList<>();
+        ArrayList<Integer> colsToRemove = new ArrayList<>();
+
+        for (int x=0; x<dim; x++) {
+            if (nullCol(x, dim, givenArray)) {
+                colsToRemove.add(x);
+            }
+        }
+
+        for (int y=0; y<dim; y++) {
+            if (nullRow(y, dim, givenArray)) {
+                rowsToRemove.add(y);
+            }
+        }
+
+        String[][] output =
+                new String[dim - colsToRemove.size()][dim - rowsToRemove.size()];
+
+        int xOn = -1;
+        int yOn = -1;
+
+
+        for (int y=0; y<dim; y++) {
+            xOn = -1;
+            if (!rowsToRemove.contains(y)) {
+                yOn++;
+                for (int x=0; x<dim; x++) {
+                    if (!colsToRemove.contains(x)) {
+                        xOn++;
+                        output[xOn][yOn] = givenArray[x][y];
+                    }
+                }
+            }
+        }
+        return mkSquare(output);
+    }
+
+    /** returns true iff a given column or row is completely null in a given 2D array **/
+    private static boolean nullCol(int x, int dim, String[][] board) {
+        for (int y=0; y<dim; y++) {
+            if (board[x][y] != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean nullRow(int y, int dim, String[][] board) {
+        for (int x=0; x<dim; x++) {
+            if (board[x][y] != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** makes a board square **/
+    private static String[][] mkSquare(String[][] givenBoard) {
+        int xSize = givenBoard.length;
+        int ySize = givenBoard[0].length;
+        int finalDim = Integer.max(xSize, ySize);
+        String[][] output = new String[finalDim][finalDim];
+
+        if (xSize == ySize) {
+            return givenBoard;
+        }
+
+        int addAbove;
+        int addBelow;
+        if (xSize > ySize) {
+            addAbove = (xSize-ySize)/2;
+            addBelow = (xSize-ySize)-addAbove;
+
+            for (int y=0; y<finalDim; y++) {
+                if ((y<addBelow) || (y>(ySize+addBelow))) {
+                    continue;
+                }
+                for (int x=0; x<finalDim; x++) {
+                    output[x][y] = givenBoard[x][y-addBelow];
+                }
+            }
+        }
+
+        int addRight;
+        int addLeft;
+        if (ySize > xSize) {
+            addRight = (ySize-xSize)/2;
+            addLeft = (ySize-xSize)-addRight;
+
+            for (int x=0; x<finalDim; x++) {
+                if ((x<addLeft) || (x>(xSize+addLeft))) {
+                    continue;
+                }
+                for (int y=0; y<finalDim; y++) {
+                    output[x][y] = givenBoard[x-addLeft][y];
+                }
+            }
+        }
+        return output;
+    }
 }

@@ -4,7 +4,7 @@ import java.util.Collections;
 
 public enum Direction {
     UP,
-    RIGHT;
+    RIGHT; //MUST NOT START WITH THE SAME LETTER
 
     public static ArrayList<Direction> getRndIteration() {
         ArrayList<Direction> output = new ArrayList<>(Arrays.asList(UP, RIGHT));

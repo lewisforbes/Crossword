@@ -11,8 +11,14 @@ public class Word {
     /** the name of the word **/
     private String name;
 
+    /** the clue for the word **/
+    private String clue;
+
     /** the order in which to try directions **/
     private ArrayList<Direction> directionIteration;
+
+    /** the number assigned to the word **/
+    private int num;
 
     /** make a new word **/
     public Word(String name) {
@@ -31,6 +37,17 @@ public class Word {
 
     public Direction getDirection() { return direction; }
 
+    public String getClue() {
+        if (clue == null) {
+            mkClue();
+        }
+        return clue;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
 
     //SETTERS//
     public void setPosition(String position) {
@@ -39,6 +56,10 @@ public class Word {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void removeDirectionFromIteration(Direction toRemove) {
+        directionIteration.remove(toRemove);
     }
 
     /** returns the individual coordinates of the first letter of the word **/
@@ -50,6 +71,10 @@ public class Word {
     public int getY() {
         Objects.requireNonNull(position);
         return Utils.getY(position);
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
 
@@ -85,5 +110,15 @@ public class Word {
             }
         }
         return output;
+    }
+
+    /** makes a clue for the word **/
+    private void mkClue() {
+        clue = DefinitionGetter.getDefinition(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
